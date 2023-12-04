@@ -23,14 +23,18 @@ function displayHighScores() {
 
     // Display high scores in the ol element
     let highScoresList = document.getElementById("highscores");
-    highScoresList.innerHTML = "";
 
-    for (let i = 0; i < highScores.length && i < 10; i++) {
-        let listItem = document.createElement("li");
-        listItem.textContent = `${highScores[i].initials}: ${highScores[i].score}`;
-        highScoresList.appendChild(listItem);
+    // Check if the highScoresList element exists before manipulating it
+    if (highScoresList) {
+        highScoresList.innerHTML = "";
+
+        for (let i = 0; i < highScores.length && i < 10; i++) {
+            let listItem = document.createElement("li");
+            listItem.textContent = `${highScores[i].initials}: ${highScores[i].score}`;
+            highScoresList.appendChild(listItem);
+        }
     }
 }
 
-// Call the displayHighScores function when the page loads
+// Call the displayHighScores function when the page is fully loaded
 document.addEventListener("DOMContentLoaded", displayHighScores);
