@@ -53,6 +53,11 @@ function displayQuestion(question) {
         choiceBtn.addEventListener("click", handleAnswerClick); // Add click event listener
         choicesContainer.appendChild(choiceBtn);
     }
+
+    // Check if the timer has reached 0 after displaying the question
+    if (timer === 0) {
+        endQuiz();
+    }
 }
 
 // Function to handle the user's answer click
@@ -78,6 +83,7 @@ function checkAnswer(userAnswerIndex) {
         timer -= 10; // Deduct 10 seconds from the timer
         if (timer < 0) {
             timer = 0; // Ensure the timer doesn't go below 0
+            endQuiz();
         }
     }
 
