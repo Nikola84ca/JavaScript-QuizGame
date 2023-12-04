@@ -1,4 +1,4 @@
-let timer = 75; // Initial time in seconds
+let timer = 25; // Initial time in seconds
 let timerInterval; 
 
 // Display the initial time
@@ -39,6 +39,13 @@ function startQuiz() {
 
 // Function to display a question
 function displayQuestion(question) {
+    // Check if the timer has reached 0
+    if (timer === 0) {
+        document.getElementById("questions").classList.add("hide");
+        endQuiz(); // Call endQuiz to show the initials input directly
+        return; // Exit the function to prevent displaying the question
+    }
+
     // Display the question text
     document.getElementById("question-title").textContent = question.questionText;
 
@@ -53,11 +60,7 @@ function displayQuestion(question) {
         choiceBtn.addEventListener("click", handleAnswerClick); // Add click event listener
         choicesContainer.appendChild(choiceBtn);
     }
-
-    // Check if the timer has reached 0 after displaying the question
-    if (timer === 0) {
-        endQuiz();
-    }
+    
 }
 
 // Function to handle the user's answer click
@@ -83,11 +86,10 @@ function checkAnswer(userAnswerIndex) {
         timer -= 10; // Deduct 10 seconds from the timer
         if (timer < 0) {
             timer = 0; // Ensure the timer doesn't go below 0
-            endQuiz();
         }
     }
 
-    // Move to the next question or end the quiz
+    // Move to the next question or end the quiz if there are no more questions
     currentQuestionIndex++;
 
     if (currentQuestionIndex < questions.length) {
@@ -99,6 +101,8 @@ function checkAnswer(userAnswerIndex) {
     }
 }
 
+
+// Function to end the quiz
 function endQuiz() {
     // Stop the timer interval
     clearInterval(timerInterval);
@@ -112,9 +116,17 @@ function endQuiz() {
 
     // Display the final score
     document.getElementById("final-score").textContent = score;
+
+    // Check if the timer has reached 0
+    if (timer === 0) {
+        // Timer has reached 0, show the initials input directly after a short delay
+        setTimeout(function() {
+            document.getElementById("initials").focus();
+        }, 100);
+    }
 }
 
-// Additional code to handle the submission of initials (you may need to adjust this based on your specific requirements)
+// Additional code to handle the submission of initials 
 let submitButton = document.getElementById("submit");
 submitButton.addEventListener("click", submitScore);
 
@@ -127,10 +139,4 @@ function submitScore() {
     // Redirect to highscores page
     window.location.href = "highscores.html";
 }
-
-// if the answer is wrong remove time from timer
-
-// else pass to the other question until timer is over
-
-// ask the user the name and store it with the score
 
