@@ -1,4 +1,5 @@
 let timer = 75; // Initial time in seconds
+let timerInterval; 
 
 // Display the initial time
 document.getElementById("time").textContent = timer;
@@ -17,7 +18,7 @@ function startQuiz() {
     document.getElementById("questions").classList.remove("hide");
 
     // Start the timer interval
-    let timerInterval = setInterval(function () {
+    timerInterval = setInterval(function () {
         // Update the timer
         timer--;
 
@@ -91,7 +92,6 @@ function checkAnswer(userAnswerIndex) {
     }
 }
 
-// Function to end the quiz
 function endQuiz() {
     // Stop the timer interval
     clearInterval(timerInterval);
@@ -114,12 +114,11 @@ submitButton.addEventListener("click", submitScore);
 function submitScore() {
     let initials = document.getElementById("initials").value;
 
-    // Logic to handle saving the score and initials (you can implement this part)
-    // For example, you can store it in local storage or send it to a server.
-    
-    // After saving, you might want to redirect the user or perform other actions.
-    // For now, let's assume you have a function saveScore(initials, score)
+    // Logic to handle saving the score and initials
     saveScore(initials, score);
+
+    // Redirect to highscores page
+    window.location.href = "highscores.html";
 }
 
 // if the answer is wrong remove time from timer
