@@ -10,6 +10,7 @@ let startButton = document.getElementById("start");
 // Add an event listener to start the quiz when the button is clicked
 startButton.addEventListener("click", startQuiz);
 
+
 function startQuiz() {
     // Hide the start screen
     document.getElementById("start-screen").classList.add("hide");

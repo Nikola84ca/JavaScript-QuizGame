@@ -38,3 +38,23 @@ function displayHighScores() {
 
 // Call the displayHighScores function when the page is fully loaded
 document.addEventListener("DOMContentLoaded", displayHighScores);
+
+// Function to clear high scores
+function clearHighScores() {
+    // Clear the high scores stored in local storage
+    localStorage.removeItem("highScores");
+
+    // After clearing, re-display the high scores (which will be empty)
+    displayHighScores();
+}
+
+// Call the displayHighScores function when the page is fully loaded
+document.addEventListener("DOMContentLoaded", displayHighScores);
+
+// Find the "Clear Highscores" button by its id
+let clearButton = document.getElementById("clear");
+
+// Add an event listener to clear highscores when the button is clicked
+if (clearButton) {
+    clearButton.addEventListener("click", clearHighScores);
+}
