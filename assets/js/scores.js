@@ -49,8 +49,6 @@ function clearHighScores() {
     displayHighScores();
 }
 
-
-
 // Lastly I add an event listener to clear highscores when the button is clicked
 if (clearButton) {
     clearButton.addEventListener("click", clearHighScores);

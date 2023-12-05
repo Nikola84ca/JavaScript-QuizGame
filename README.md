@@ -8,9 +8,9 @@ Born and raised in Italy, I moved to the UK in 2015. I have always been interest
 
 ## Usage
 
-You can visit the JavaScript Quiz Game website by clicking [HERE](https://github.com/Nikola84ca/JavaScript-QuizGame).  Alternatively to the url above, you can clone the repository on your device as shown in the Installation section below and access the index.html file by opening it in your browser. Here is a gif animation of the step-by-step procedure to generate your password:
+You can visit the JavaScript Quiz Game website by clicking [HERE](https://nikola84ca.github.io/JavaScript-QuizGame/). Alternatively to the url above, you can clone the repository on your device as shown in the Installation section below and access the index.html file by opening it in your browser. Here is a gif animation of the step-by-step procedure to generate your password:
 
-![Gif animation of how to use the Password Generator](/assets/Images/password-generator-test-animation.gif)
+![Gif animation of how to play the game](/assets/images/JavaScript-Coding-Quiz.gif)
 
 ## Installation
 First, make sure that Git and Git Bash are installed on your system. To download this project on your machine click [HERE](https://github.com/Nikola84ca/JavaScript-QuizGame) to go to the repository on GitHub. Click on the green CODE button, and copy the link of the repository. In your machine, open gitBash and create a new folder where you will clone the project using the command below:
@@ -143,8 +143,6 @@ function startQuiz() {
 
 ```
 
-
-
 * Now that the game is started I implemented the functions that collects the user clicks and shows the questions while collecting the clicks on the answers buttons.
 
 ```JavaScript
@@ -215,7 +213,7 @@ function checkAnswer(userAnswerIndex) {
 }
 ```
 
-![Gif animation of invalid length input](/assets/Images/password-generator-invalid-input.gif)
+![Gif animation of wrong answer -10 seconds](/assets/images/JavaScript-Coding-Quiz-wrong-answer.gif)
 
 
 * Here I implemented the endQuiz function, it is fundamental to make allow the user to enter the initials for the highest scores page. When we finish with all the questions or the timer is up the firt thing to do is to stop the timer interval, hide the questions div and show the end-screen message with the button to submit the initials and the final score of the game. The code will hide the questions div and show the end screen and final score of the game, allowing the user to insert the initials. I also implemented an extra condition that, in case the user didn't answer any questions but the timer ends to the zero, it will end the game anyway and will show the initials input. Here is the function:
@@ -257,9 +255,6 @@ function submitScore() {
     window.location.href = "highscores.html";
 }
 ```
-
-![Gif animation of invalid character type choice](/assets/Images/password-generator-type-choice.gif)
-
 
 * Now that the user has been redirected to the highscores page, I needed to make sure all the scores and initials of the possible multiple games are stored and listed, untill the user decides to erase the list by clicking the relative button. The first function I implemented was the saveScore, which retrieves existing scores from storage or initialize an empty array then sort the values in order:
 
@@ -305,20 +300,22 @@ document.addEventListener("DOMContentLoaded", displayHighScores);
 ```JavaScript
 let clearButton = document.getElementById("clear");
 
-
 function clearHighScores() {
     localStorage.removeItem("highScores");
     displayHighScores();
 }
-
 ```
 
 
-* La.
+* Lastly I added an event listener to clear highscores when the button is clicked
 
 ```JavaScript
-
+if (clearButton) {
+    clearButton.addEventListener("click", clearHighScores);
+}
 ```
+
+![Gif animation of end game initials input, high score list and clear high score function](/assets/images/JavaScript-Coding-Quiz-EndGame-Clear-HighScores.gif)
 
 
 ## Credits
@@ -327,7 +324,7 @@ I would like to thank all the teachers and TA of the EdX bootcamp for all the co
 
 ## Project Status and Upcoming Improvements
 
-The Webpage is functional and easy to navigate, yet some more interactive CSS and some more function could give the user a better experience. The "engine" of the website works well, and another way to randomize the password could be made by using the Fisher-Yates algorith.
+The Webpage is functional and easy to navigate, yet some more interactive CSS and some more function could give the user a better experience. The "engine" of the website works well, and the next step will be to implement the audio effects that will play everytime the user selects and answer. The incorrect.wav file will play when the user selects a wrong answer, while the correct.wav file will play when the user selected the correct answer.
 
 ## Collaborations and Contributions
 
