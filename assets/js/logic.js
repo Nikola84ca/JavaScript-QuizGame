@@ -1,61 +1,59 @@
 
 
-let timer = 75; // Initial time in seconds
+let timer = 75; // This is the timer variable with its initial time of 75 seconds
+// timerInterval is a fundamental variable as it will help us implement the function to decrement the countdown
 let timerInterval; 
 
-// Display the initial time
+// This displays the initial time to the user
 document.getElementById("time").textContent = timer;
 
-// Find the "Start Quiz" button by its id
+// startButton finds the "Start Quiz" button by its id from the HTML
 let startButton = document.getElementById("start");
 
-// Add an event listener to start the quiz when the button is clicked
+// I then added an event listener to start the quiz when the button is clicked
 startButton.addEventListener("click", startQuiz);
 
+// The following startQuiz function is triggered when the click event from the user is collected after they click on the start game button. The first thing I do is to hide the with the relative class the start screen with the game rules, and show the first question by calling the relative div questions. at this point the timerIntervals, thanks to the setInterval function starts the countdown and shows it on the screen for the users. 
 
 function startQuiz() {
-    // Hide the start screen
+    // Hides the start screen
     document.getElementById("start-screen").classList.add("hide");
     
-    // Show the questions div
+    // Shows the questions div
     document.getElementById("questions").classList.remove("hide");
 
-    // Start the timer interval
+    // Starts the timer interval
     timerInterval = setInterval(function () {
-        // Update the timer
+        // Updates and display the timer
         timer--;
-
-        // Display the updated time
         document.getElementById("time").textContent = timer;
 
-        // Check if the timer has reached 0
+        // A fundamental step is to check if the timer has reached 0, in that case I will stop the interval and will end the quiz with the endQuiz function
         if (timer == 0) {
-            clearInterval(timerInterval); // Stop the interval
-            // Additional logic when the timer reaches 0 (e.g., endQuiz())
-            // No more questions, end the quiz
-        endQuiz();
+            clearInterval(timerInterval); 
+            endQuiz();
         }
     }, 1000);
 
-    // Display the first question
+    // Lastly once the timer functions are set I display the first question
     displayQuestion(questions[0]);
 }
 
-// Function to display a question
+// Function to display the questions
 function displayQuestion(question) {
-    // Check if the timer has reached 0
+    // The first thing to do is to check if the timer has reached 0 or not, if it has we will end the Quiz
     if (timer === 0) {
         document.getElementById("questions").classList.add("hide");
         endQuiz(); // Call endQuiz to show the initials input directly
         return; // Exit the function to prevent displaying the question
     }
 
-    // Display the question text
+    // Then we display the question text and the answer options as buttons
     document.getElementById("question-title").textContent = question.questionText;
-
-    // Display answer options as buttons
     let choicesContainer = document.getElementById("choices");
     choicesContainer.innerHTML = "";
+
+    // At this point the fundamental step is to get the click event from the user, store the choice
 
     for (let j = 0; j < question.answers.length; j++) {
         let choiceBtn = document.createElement("button");
@@ -75,7 +73,7 @@ function handleAnswerClick(event) {
 
 
 let currentQuestionIndex = 0; // Track the index of the current question
-let score = 0; // Initialize the score
+let score = 0; // Initializes the score to zero
 
 // Function to check the user's answer
 function checkAnswer(userAnswerIndex) {
@@ -84,12 +82,12 @@ function checkAnswer(userAnswerIndex) {
     // Check if the user's answer is correct
     if (userAnswerIndex === currentQuestion.answers.indexOf(currentQuestion.correctAnswer)) {
         // Correct answer
-        score += 10; // Increment the score
+        score += 10; // The answer is correct so we increment the score
     } else {
         // Incorrect answer
-        timer -= 10; // Deduct 10 seconds from the timer
+        timer -= 10; // Since the answer is wrong we remove 10 seconds from the timer
         if (timer < 0) {
-            timer = 0; // Ensure the timer doesn't go below 0
+            timer = 0; // This makes sure the timer doesn't go below 0
         }
     }
 
@@ -106,19 +104,18 @@ function checkAnswer(userAnswerIndex) {
 }
 
 
-// Function to end the quiz
+// The following is the function to end the quiz, it is fundamental to make allow the user to enter the initials for the highest scores page.
 function endQuiz() {
-    // Stop the timer interval
-    clearInterval(timerInterval);
+    // When we finish with all the questions or the timer is up the firt thing to do is to stop the timer interval, hide the questions div and show the end-screen message with the button to submit the initials and the final score of the game.
 
-    // Hide the questions div
+    clearInterval(timerInterval);
     document.getElementById("questions").classList.add("hide");
 
-    // Display the end screen
+    // This displays the end screen div 
     let endScreen = document.getElementById("end-screen");
     endScreen.classList.remove("hide");
 
-    // Display the final score
+    // This will display the final score of the game
     document.getElementById("final-score").textContent = score;
 
     // Check if the timer has reached 0
@@ -142,7 +139,7 @@ function submitScore() {
     // Logic to handle saving the score and initials
     saveScore(initials, score);
 
-    // Redirect to highscores page
+    // This will redirect the user to highscores page
     window.location.href = "highscores.html";
 }
 

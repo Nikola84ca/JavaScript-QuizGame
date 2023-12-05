@@ -46,12 +46,12 @@ The website is a two-page site that will use JavaScript to manipulate the HTML o
 
 * Insert their initials at the end of the game to view the Highest Scores page.
 
-* Choose to do another game or reset the Highest Scores database by pressing the relative buttons.
+* Choose to play another round and/or reset the Highest Scores database by pressing the relative buttons.
 
 
 ## My Process
 
-* The first thing I did was making sure the two html file included the JavaScript links in the body section.
+* The first thing I did was noticing that the two html file included the JavaScript links in the body section.
 Here are the links in the index.html file:
 
 ```HTML
@@ -64,139 +64,260 @@ Here is the link in the highscores.html file:
     <script src="./assets/js/scores.js"></script>
 ```
 
-* Then I identified the Data set given. The passwords will be created by mixing the characters inside four arrays: numericCharacters, lowerCasedCharacters, upperCasedCharacters, specialCharacters. Inside each one of these arrays we have the relative characters we will need to select randomly to create the final password. Here are two examples of the arrays:
+* Then I created the relative .js files and started implementing the questions.js file, which stores an array of objects. I decided to opt for this option as it is the most functional and easy to implement. Every object in the array is a question that has a text for the question copy, an array containing the four possible answers and a property containing the correct answer that we'll use later to check if the user selected the correct answer or not. Here is how I implemented the array:
 
 ```JavaScript
-var numericCharacters = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+let questions = [
+    {
+      questionText: "What is JavaScript?",
+      answers: ["A pastry shop", "A Chinese Restaurant", "A programming language", "An elicopter"],
+      correctAnswer: "A programming language"
+    },
+    {
+      questionText: "What does JavaScript use loops for?",
+      answers: ["To wash dishes", "Fry potatoes", "Implement a series of instructions and comparisons", "update the colors of the background of your desktop"],
+      correctAnswer: "Implement a series of instructions and comparisons"
+    },
+    {
+      questionText: "What happens if you don't declare a variable in JS?",
+      answers: ["The code won't work", "A puppy cries", "Your PC will restart", "Your mouse will run away"],
+      correctAnswer: "The code won't work"
+    },
+    {
+     questionText: "What does i++ do?",
+     answers: ["Creates a new object", "Increments the value of i in a loop", "Checks for bugs", "Makes your code run faster"],
+     correctAnswer: "Increments the value of i in a loop"
+      },
+  ];
+  
 ```
+
+* Once I defined the data sets, I started working on the logic.js file, and the first thing I did was to set avariable for the timer ( to 75 seconds ) and declared also another variable timerInterval, that will be necessary to subtract the seconds in the countdown and update the time as well. I made sure that the first thing these variable do is to show the time on the screen, so I used the time id in the html to assign the variable value:
+
 ```JavaScript
-var specialCharacters = ['@', '%', '[', '~', ... ];
+let timer = 75; // This is the timer variable with its initial time of 75 seconds
+// timerInterval is a fundamental variable as it will help us implement the function to decrement the countdown
+let timerInterval; 
+
+// This displays the initial time to the user
+document.getElementById("time").textContent = timer;
 ```
 
-* Once I identified the data sets, I broke down the structure of the code into four main functions. In order to make the website work, we need one function to obtain the input from the user, one with the general pourpose to return a random element from our arrays, one that generates the password using the random function, and a final one that prints out the generated password on the webpage.
-
-* The first thing I did was declaring five variables with global scope: these variables will be used by more than one function and they will contain the input from the user.
+* Now that the timer variables are set I decided to implement the beginning of the game with an event that collects the click of the user on the start game button. 
 
 ```JavaScript
-let length;
-let hasNumbers, hasCapital, hasLower, hasSpecialChar;
+// startButton finds the "Start Quiz" button by its id from the HTML
+let startButton = document.getElementById("start");
+
+// I then added an event listener to start the quiz when the button is clicked
+startButton.addEventListener("click", startQuiz);
+
 ```
 
-* length will contain the number of characters the user wants to be include in the password, while hasNumbers, hasCapital etc will be boolean variables that will indicate if the user wants (true) or doesn't want (false) include a specific character type.
-
-* At this point I started implementing the first function, called getPasswordOptions. This function main scope is to interact with the user and get the information we need to create the password. To get this data I decided to use alert and confirm prompt messages. Since I needed a specific input for the length, a number between 8 and 128, I decided to create a do/while loop that keeps looping until the user inserted the right value. Here is the code:
+* Now that I have the input from the user to start the game I implemented the following startQuiz function. It is triggered when the click event from the user is collected after they click on the start game button. The first thing I do is to hide the with the relative class the start screen with the game rules, and show the first question by calling the relative div questions. at this point the timerIntervals, thanks to the setInterval function starts the countdown and shows it on the screen for the users. 
 
 ```JavaScript
-  do {
-    length = parseInt(prompt('Choose the length of your Password: type a number between 8 and 128 '));
+function startQuiz() {
+    // Hides the start screen
+    document.getElementById("start-screen").classList.add("hide");
+    
+    // Shows the questions div
+    document.getElementById("questions").classList.remove("hide");
 
-    if (!isNaN(length) && length >= 8 && length <= 128) {
-      break;
-    } else {
-      alert("Invalid input. Please enter a number between 8 and 128.");
+    // Starts the timer interval
+    timerInterval = setInterval(function () {
+        // Updates and display the timer
+        timer--;
+        document.getElementById("time").textContent = timer;
+
+        // A fundamental step is to check if the timer has reached 0, in that case I will stop the interval and will end the quiz with the endQuiz function
+        if (timer == 0) {
+            clearInterval(timerInterval); 
+            endQuiz();
+        }
+    }, 1000);
+
+    // Lastly once the timer functions are set I display the first question
+    displayQuestion(questions[0]);
+}
+
+```
+
+
+
+* Now that the game is started I implemented the functions that collects the user clicks and shows the questions while collecting the clicks on the answers buttons.
+
+```JavaScript
+function handleAnswerClick(event) {
+    let userAnswerIndex = parseInt(event.target.getAttribute("data-index"), 10);
+    checkAnswer(userAnswerIndex);
+}
+
+
+function displayQuestion(question) {
+    // The first thing to do is to check if the timer has reached 0 or not, if it has we will end the Quiz
+    if (timer === 0) {
+        document.getElementById("questions").classList.add("hide");
+        endQuiz(); // Call endQuiz to show the initials input directly
+        return; // Exit the function to prevent displaying the question
     }
-  } while (true);
+
+    // Then we display the question text and the answer options as buttons
+    document.getElementById("question-title").textContent = question.questionText;
+    let choicesContainer = document.getElementById("choices");
+    choicesContainer.innerHTML = "";
+
+    // At this point the fundamental step is to get the click event from the user, store the choice
+
+    for (let j = 0; j < question.answers.length; j++) {
+        let choiceBtn = document.createElement("button");
+        choiceBtn.textContent = question.answers[j];
+        choiceBtn.setAttribute("data-index", j); // Set data-index to identify the chosen answer
+        choiceBtn.addEventListener("click", handleAnswerClick); // Add click event listener
+        choicesContainer.appendChild(choiceBtn);
+    }
+    
+}
 ```  
-* This "if" makes sure that the input from the user is a number and if it is included in the range required between 8 and 128, I decided to include 8 and 128 as valid numbers as well. If the conditions above in the "if" are true the user's input is valid so we exit the loop and ask the Character types to be included in the password, otherwise we alert that the input is invalid and we repeat the loop asking again for the length of the password. We'll break the loop only when the length is a number between 8 and 128. Here is an example of this part of the function when the user inserts an invalid input: 
+
+* Now that we got the functions to collect the user choices we have to check if the answer is correct, if it is we increment the user's score and show the next question until we reach the endof the array of questions, if the question is wrong the score will not be incremented and the timer will lose 10 seconds. An important step was to add also to make sure that if the timer is at zero we end the game. Here is the code:
+
+```JavaScript
+let currentQuestionIndex = 0; // Track the index of the current question
+let score = 0; // Initializes the score to zero
+
+// Function to check the user's answer
+function checkAnswer(userAnswerIndex) {
+    let currentQuestion = questions[currentQuestionIndex];
+
+    // Check if the user's answer is correct
+    if (userAnswerIndex === currentQuestion.answers.indexOf(currentQuestion.correctAnswer)) {
+        // Correct answer
+        score += 10; // The answer is correct so we increment the score
+    } else {
+        // Incorrect answer
+        timer -= 10; // Since the answer is wrong we remove 10 seconds from the timer
+        if (timer < 0) {
+            timer = 0; // This makes sure the timer doesn't go below 0
+        }
+    }
+
+    // Move to the next question or end the quiz if there are no more questions
+    currentQuestionIndex++;
+
+    if (currentQuestionIndex < questions.length) {
+        // Display the next question
+        displayQuestion(questions[currentQuestionIndex]);
+    } else {
+        // No more questions, end the quiz
+        endQuiz();
+    }
+}
+```
 
 ![Gif animation of invalid length input](/assets/Images/password-generator-invalid-input.gif)
 
-* Once obtained the length, the function needs to make sure the user selects at least one of the character types stored in our arrays, so with anoter do/while loop the function presents a series of confirm prompts that ask the user the input for every character type, looping until at least one type is chosen. Here is the code:
+
+* Here I implemented the endQuiz function, it is fundamental to make allow the user to enter the initials for the highest scores page. When we finish with all the questions or the timer is up the firt thing to do is to stop the timer interval, hide the questions div and show the end-screen message with the button to submit the initials and the final score of the game. The code will hide the questions div and show the end screen and final score of the game, allowing the user to insert the initials. I also implemented an extra condition that, in case the user didn't answer any questions but the timer ends to the zero, it will end the game anyway and will show the initials input. Here is the function:
 
 ```JavaScript
-let hasAtLeastOneType;
+function endQuiz() {
 
-  do {
-       hasAtLeastOneType= false;
-    do {
-      hasNumbers = confirm('Do you want to include Numbers in your Password? ');
-      hasCapital = confirm('Do you want to include Capital Letters? ');
-      hasLower = confirm('Do you want to include Lower Case Letters? ');
-      hasSpecialChar = confirm('Do you want to include Special Characters? ');
+    clearInterval(timerInterval);
+    document.getElementById("questions").classList.add("hide");
 
-      if (hasNumbers || hasCapital || hasLower || hasSpecialChar) {
-        hasAtLeastOneType = true;
-      } else {
-        alert("You must select at least one character type.");
-      }
-    } while (!hasAtLeastOneType);
+    // This displays the end screen div 
+    let endScreen = document.getElementById("end-screen");
+    endScreen.classList.remove("hide");
 
-  } while (!hasAtLeastOneType);
+    // This will display the final score of the game
+    document.getElementById("final-score").textContent = score;
+
+    // Check if the timer has reached 0
+    if (timer === 0) {
+        // Hide the questions div
+        document.getElementById("questions").classList.add("hide");
+        // Timer has reached 0, show the initials input directly after a short delay
+        setTimeout(function() {
+            document.getElementById("initials").focus();
+        }, 100);
+    }
+}
 
 ```
-* I decided to do a first do/while loop where the variable hasAtLeastOneType become true only when one of the global boolean variables hasNumbers, hasCapital, hasLower, or hasSpecialChar is true through the confirm. I initialized it as false to run the outer loop and looped it until, one of the conditions of the "if" was true. The function checks if at least one character type has been selected, then the variable hasAtLeastOneType becomes true and we can exit both loops, otherwise we alert the user to inform that at least one character type must be selected and we go back up in the loop representing all the confirms. We finish the loop only when at least one of the variables hasNumber, hasCapital, hasLower, or hasSpecialChar is true. Here is an example of this part of the function in case the user doesn't select a character type:
+* Finally, when the user clicks submit, the score and the initials will be stored and we will redirect the player to the highscores page.
+
+```JavaScript
+let submitButton = document.getElementById("submit");
+submitButton.addEventListener("click", submitScore);
+
+function submitScore() {
+    let initials = document.getElementById("initials").value;
+    saveScore(initials, score);
+    window.location.href = "highscores.html";
+}
+```
 
 ![Gif animation of invalid character type choice](/assets/Images/password-generator-type-choice.gif)
 
 
-* The second function is a short one but fundamental for the whole success of this project. It is the getRandom function, a general but effective code that selects a random element from an array and returns it to the variable speficied in another function.
+* Now that the user has been redirected to the highscores page, I needed to make sure all the scores and initials of the possible multiple games are stored and listed, untill the user decides to erase the list by clicking the relative button. The first function I implemented was the saveScore, which retrieves existing scores from storage or initialize an empty array then sort the values in order:
 
 ```JavaScript
-function getRandom(arr) {
-  let randomElement = arr[Math.floor(Math.random()*arr.length)];
-  return randomElement;
+function saveScore(initials, score) {
+    let highScores = JSON.parse(localStorage.getItem("highScores")) || [];
+
+    // Add the current score and initials
+    highScores.push({ initials, score });
+
+    // Sort scores in descending order
+    highScores.sort((a, b) => b.score - a.score);
+
+    // Store the updated scores back to storage
+    localStorage.setItem("highScores", JSON.stringify(highScores));
 }
 ```
 
-* Now that we have the input from the user and the getRandom function to access the arrays elements randomly, I created the generatePassword function. My approach is to use a temporary password called tempPass, which is an array where the function will store the random elements from each character type chosen by the user. This tempPass will be shuffled at the end of the function to randomize even more the final password. The following loop runs until the tempPass array reaches the length chosen by the user. At every loop, it checks if the four boolean variables hasNumbers, hasCapital etc are true or false. If they are true, it means the user wants to include that specific type of character so, with a getRandom function I temporary store the random character from that array inside randomNum, randomCapital etc and then I update the tempPass by adding those characters, one after the other in the temporary password array using the push method. Here is the code followed by the explaination:
+* Now we use the value returned by the saveScore function to display the list of high scores. I implemented the function displayHighScores so that it retrieves existing scores from the storage and if there are none then initializes an empty array. To do so, the first thing I did was to add the current scores and initials, then sort the scores in descending order and finally store the updated scores back in the storage. Here is the function saveScore:
 
 ```JavaScript
-function generatePassword() {
-  let tempPass = [];
-  while (tempPass.length < length) {
-    if (hasNumbers) {
-      let randomNum = getRandom(numericCharacters);
-      tempPass.push(randomNum);
-    }
-    if (hasCapital) {
-      let randomCapital = getRandom(upperCasedCharacters);
-      tempPass.push(randomCapital);
-    }
-    if (hasLower) {
-      let randomLower = getRandom(lowerCasedCharacters);
-      tempPass.push(randomLower);
-    }
-    if (hasSpecialChar) {
-      let randomSpecialChar = getRandom(specialCharacters);
-      tempPass.push(randomSpecialChar);
-    }
-  }
+function saveScore(initials, score) {
+
+    let highScores = JSON.parse(localStorage.getItem("highScores")) || [];
+
+    highScores.push({ initials, score });
+
+    highScores.sort((a, b) => b.score - a.score);
+
+    localStorage.setItem("highScores", JSON.stringify(highScores));
+}
 ```
 
-* I could have avoid using the randomNum, randomCapital etc, but I wanted to keep the values in a separate variable in case I decide to update the function and create a second version of the randomized password. At this point I could have just returned the tempPassword using the join and slice methods, to turn it into a string of the length chosen by the user ( return tempPass.join('').slice(0, length); ). The only issue with this, even if the password is functinal and consists of random elements from the character arrays is that the characters will always appear in the same order, which is the order of the "ifs" in the loop above. This means that if the users click the generate password button again, and if they chose lowercase characters, and a number, they will always have a random lowercase character as first character, followed by a random number, then another random lowercase and so on. This is an example of the passwords generate:
-
-        e2f4e6h8
-        t7g4j3k7
-        j3k8b2z3
-        c5v2p5m6
-
- Even if they are random, this alternance doen't provide a deep security level as the algorithm is following an evident pattern, so I decided to store the tempPass into the finalPassword variable, which will be shuffled once again giving every time random characters in random positions of the array. The following joins the characters in the tempPass array and slices it to the desired length before storing it in the finalPassword variable. Then finalPassword is shuffled using the sort metod and Math.random. The three dots ... before finalPassword are the spread syntax, which is used to convert the string to an array temporarily for the purpose of shuffling.
+* Once I saved and ordered the high scores I call the displayHighScores function:
  
 ```JavaScript
-  let finalPassword = tempPass.join('').slice(0, length);
-  finalPassword = [...finalPassword].sort(() => Math.random() - 0.5).join('');
-
-  return finalPassword;
-}
+document.addEventListener("DOMContentLoaded", displayHighScores);
 ```
 
 
-* Once the password has been generated and stored in the finalPassword variable, the function writePassword, connected with the HTML and CSS will write the password on the form for the user to see.
+* One of the requirement was to let the user clear the high score list when clicking the relative button, to do that I simply used the removeItem function on the localStorage, cancelling the data of highScores, then called again the function to displayHighScores to show the empty list:
 
 ```JavaScript
-function writePassword() {
-  var password = generatePassword();
-  var passwordText = document.querySelector('#password');
+let clearButton = document.getElementById("clear");
 
-  passwordText.value = password;
+
+function clearHighScores() {
+    localStorage.removeItem("highScores");
+    displayHighScores();
 }
+
 ```
 
 
-* Lastly, I made sure to call the function getPasswordOptions to initialize the process for the users once the site is loaded in their browser so that they can insert their input.
+* La.
 
 ```JavaScript
-getPasswordOptions();
+
 ```
 
 
