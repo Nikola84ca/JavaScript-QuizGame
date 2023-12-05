@@ -1,4 +1,4 @@
-// Array of Objects for the questions
+// In this array of Objects we will store a text for the question copy, an array for the possible answers, and a property for the correct answer
 
 let questions = [
     {
@@ -8,7 +8,7 @@ let questions = [
     },
     {
       questionText: "What does JavaScript use loops for?",
-      answers: ["To wash dishes", "Fry potatoes", "Implement a series of instructions and comparisons", "update the colors of the background of your desktop"],
+      answers: ["To wash dishes", "Fry potatoes", "Implement a series of instructions and comparisons", "Update the colors of the background of your desktop"],
       correctAnswer: "Implement a series of instructions and comparisons"
     },
     {
@@ -21,5 +21,10 @@ let questions = [
      answers: ["Creates a new object", "Increments the value of i in a loop", "Checks for bugs", "Makes your code run faster"],
      correctAnswer: "Increments the value of i in a loop"
       },
+    {
+     questionText: "What an object in JavaScript?",
+     answers: ["A set of variables", "A list of ordered files", "A collection of properties", "A link to the CSS file"],
+     correctAnswer: "A collection of properties"
+    },
   ];
   
