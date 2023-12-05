@@ -1,7 +1,7 @@
 # JavaScript Quiz Game
 
 
-Project and development of web page for a JavaScript quiz game. The game consists of a series of questions with multiple choice answers, a timer countdown that starts at 75 seconds but get decreased of 10 seconds at every wrong answer, a form to insert the player initials and a second page that shows the ordered list of best scores, with the opportunity, through a specific button, to reset it as well.
+Project and development of web page for a JavaScript quiz game. The game consists of a series of questions with multiple choice answers, a timer countdown that starts at 75 seconds but gets decreased of 10 seconds at every wrong answer, a form to insert the player initials and a second page that shows the ordered list of best scores, with the opportunity, through a specific button, to reset it as well.
 
 ## About Me 
 Born and raised in Italy, I moved to the UK in 2015. I have always been interested in new technologies and IT, as I studied IT in my A levels back in Italy. After 5 years working in content management for a website, I decided to make the step of learning Front-End Development thanks to the edX course, and on my gitHub profile I showcase not only my progress in Front-End Development as a student but also a journey that hopefully will lead to new exciting projects in this field.
