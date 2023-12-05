@@ -1,4 +1,6 @@
-let timer = 25; // Initial time in seconds
+
+
+let timer = 75; // Initial time in seconds
 let timerInterval; 
 
 // Display the initial time
@@ -30,6 +32,8 @@ function startQuiz() {
         if (timer == 0) {
             clearInterval(timerInterval); // Stop the interval
             // Additional logic when the timer reaches 0 (e.g., endQuiz())
+            // No more questions, end the quiz
+        endQuiz();
         }
     }, 1000);
 
@@ -119,6 +123,8 @@ function endQuiz() {
 
     // Check if the timer has reached 0
     if (timer === 0) {
+        // Hide the questions div
+        document.getElementById("questions").classList.add("hide");
         // Timer has reached 0, show the initials input directly after a short delay
         setTimeout(function() {
             document.getElementById("initials").focus();
